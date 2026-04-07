@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Chrome</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #202124;
+      color: white;
+    }
+
+    .bar {
+      display: flex;
+      padding: 10px;
+      background: #303134;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bar">
+  <input id="url" placeholder="https://example.com">
+  <button onclick="go()">Aller</button>
+</div>
+
+<iframe id="frame"></iframe>
+
+<script>
+function go() {
+  let url = document.getElementById("url").value;
+
+  if (!url.startsWith("http")) {
+    alert("Ajoute https://");
+    return;
+  }
+
+  // Proxy gratuit
+  let proxy = "https://api.allorigins.win/raw?url=";
+  let finalUrl = proxy + encodeURIComponent(url);
+
+  fetch(finalUrl)
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("frame").srcdoc = html;
+    })
+    .catch(() => {
+      document.getElementById("frame").srcdoc = "<h1>Erreur de chargement</h1>";
+    });
+}
+</script>
+
+</body>
+</html>
